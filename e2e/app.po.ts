@@ -1,6 +1,13 @@
 import {browser, element, by} from 'protractor';
-
-export class BlankPage {
+class Navigation {
+  public clickButtonByText(button: string) {
+    element(by.buttonText(button)).click();
+  }
+  public clickLinkByText(button: string) {
+    element(by.linkText(button)).click();
+  }
+}
+export class BlankPage extends Navigation {
   paragraphTextLocator = element(by.css('my-root h1'));
   numberOfHeroes = element.all(by.css('.hero'));
   navigateTo() {
@@ -16,12 +23,12 @@ export class BlankPage {
     browser.wait(EC.visibilityOf(this.getNumberOfTopHeroes().all(by.css('h4')).first()), 2000);
     return this.getNumberOfTopHeroes().all(by.css('h4')).first().getText();
   }
-  clickLinkByText(button: string) {
-    element(by.linkText(button)).click();
+  getHeroByNameOnHomePage(name: string) {
+    return element(by.cssContainingText('h4', name));
   }
 }
 
-export class HeroPage {
+export class HeroPage extends Navigation {
 
   getHeroId() {
     return element(by.id('hero_id')).getText();
@@ -31,16 +38,12 @@ export class HeroPage {
     return element(by.tagName('input'));
   }
 
-  clickButtonByText(button: string) {
-    element(by.buttonText(button)).click();
-  }
-
   getDetailsText() {
     return element(by.tagName('h2')).getText();
   }
 }
 
-export class HeroesListPage {
+export class HeroesListPage extends Navigation {
   getHeroes() {
     return element.all(by.tagName('li'));
   }
@@ -49,4 +52,13 @@ export class HeroesListPage {
       return nameOfHero.split(' ')[1];
     });
   }
+
+  deleteHeroByName(name: string) {
+    element(by.cssContainingText('.hero-element', name)).element(by.xpath('following-sibling::button')).click();
+  }
+  getHeroByName(name: string) {
+    return element(by.cssContainingText('.hero-element', name));
+  }
 }
+
+
