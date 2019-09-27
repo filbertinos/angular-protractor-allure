@@ -9,6 +9,7 @@ describe('blank App', () => {
   let firstHeroName =  'Narco';
   let newName = 'Test';
   let heroForDelete = 'Celeritas';
+  let heroForAdding = 'NewHero';
   let baseUrl = 'http://localhost:4200/';
 
 
@@ -71,5 +72,21 @@ describe('blank App', () => {
     expect(heroes.getHeroByName(heroForDelete).isPresent()).toBe(false);
     heroes.clickLinkByText('Dashboard');
     expect(page.getHeroByNameOnHomePage(heroForDelete).isPresent()).toBe(false);
+  });
+  it('after deleting ' + heroForDelete + ' hero on My Heroes page, he should disappear from My heroes and blank pages', () => {
+    expect(page.getHeroByNameOnHomePage(heroForDelete).isPresent()).toBe(true);
+    page.clickLinkByText('Heroes');
+    heroes.deleteHeroByName(heroForDelete);
+    expect(heroes.getHeroByName(heroForDelete).isPresent()).toBe(false);
+    heroes.clickLinkByText('Dashboard');
+    expect(page.getHeroByNameOnHomePage(heroForDelete).isPresent()).toBe(false);
+  });
+  it('after adding new hero he should appear in heroes list', () => {
+    page.clickLinkByText('Heroes');
+    heroes.clickButtonByText('Add New Hero');
+    heroes.getHeroNameInputFiled().sendKeys(heroForAdding);
+    expect(heroes.getDetailsText()).toEqual(heroForAdding + ' details!');
+    heroes.clickButtonByText('Save');
+    expect(heroes.getHeroByName(heroForAdding).isPresent()).toBe(true);
   });
 });

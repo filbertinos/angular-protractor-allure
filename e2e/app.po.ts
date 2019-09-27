@@ -47,6 +47,13 @@ export class HeroesListPage extends Navigation {
   getHeroes() {
     return element.all(by.tagName('li'));
   }
+  getHeroNameInputFiled() {
+    return element(by.tagName('input'));
+  }
+
+  getDetailsText() {
+    return element(by.cssContainingText('h2', 'details!')).getText();
+  }
   getNameOfHeroByIndex(index: number) {
     return this.getHeroes().all(by.css('.hero-element')).get(index).getText().then(function(nameOfHero) {
       return nameOfHero.split(' ')[1];
