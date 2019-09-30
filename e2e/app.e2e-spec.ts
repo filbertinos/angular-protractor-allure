@@ -9,6 +9,7 @@ describe('blank App', () => {
   let firstHeroName =  'Narco';
   let newName = 'Test';
   let heroForDelete = 'Celeritas';
+  let heroForSelection = 'Dynama';
   let heroForAdding = 'NewHero';
   let baseUrl = 'http://localhost:4200/';
 
@@ -47,16 +48,6 @@ describe('blank App', () => {
     page.clickLinkByText('Heroes');
     expect(heroes.getNameOfHeroByIndex(1)).toEqual(newName);
   });
-  // it('name of the hero does not saved if save button not clicked', () => {
-  //   expect(page.getNameOfFirstHero()).toEqual(firstHeroName);
-  //   page.getNameOfFirstHero().click();
-  //   expect(hero.getDetailsText()).toEqual(firstHeroName + ' details!');
-  //   hero.getHeroNameInputFiled().clear();
-  //   hero.getHeroNameInputFiled().sendKeys(newName);
-  //   expect(hero.getDetailsText()).toEqual(newName + ' details!');
-  //   hero.clickButtonByText('Back');
-  //   expect(page.getNameOfFirstHero()).toEqual(firstHeroName);
-  // });
   it('number of heroes on My Heroes page should be 10', () => {
     page.clickLinkByText('Heroes');
     expect(heroes.getHeroes().count()).toEqual(10);
@@ -64,14 +55,6 @@ describe('blank App', () => {
   it('second hero on My Heroes page should be ' + firstHeroName, () => {
     page.clickLinkByText('Heroes');
     expect(heroes.getNameOfHeroByIndex(1)).toEqual(firstHeroName);
-  });
-  it('after deleting ' + heroForDelete + ' hero on My Heroes page, it should disappear from My heroes and blank pages', () => {
-    expect(page.getHeroByNameOnHomePage(heroForDelete).isPresent()).toBe(true);
-    page.clickLinkByText('Heroes');
-    heroes.deleteHeroByName(heroForDelete);
-    expect(heroes.getHeroByName(heroForDelete).isPresent()).toBe(false);
-    heroes.clickLinkByText('Dashboard');
-    expect(page.getHeroByNameOnHomePage(heroForDelete).isPresent()).toBe(false);
   });
   it('after deleting ' + heroForDelete + ' hero on My Heroes page, he should disappear from My heroes and blank pages', () => {
     expect(page.getHeroByNameOnHomePage(heroForDelete).isPresent()).toBe(true);
@@ -88,5 +71,29 @@ describe('blank App', () => {
     expect(heroes.getDetailsText()).toEqual(heroForAdding + ' details!');
     heroes.clickButtonByText('Save');
     expect(heroes.getHeroByName(heroForAdding).isPresent()).toBe(true);
+  });
+  it('after selecting hero at the My Heroes page, inscription about selection should appear', () => {
+    page.clickLinkByText('Heroes');
+    heroes.getHeroByName(heroForSelection).click();
+    expect(heroes.getSelectionText(heroForSelection).isPresent()).toBe(true);
+  });
+  it('\'View details\' button for selected hero should navigate to correct hero details page', () => {
+    page.clickLinkByText('Heroes');
+    heroes.getHeroByName(heroForSelection).click();
+    heroes.clickButtonByText('View Details');
+    expect(hero.getDetailsText()).toEqual(heroForSelection + ' details!');
+    expect(hero.getHeroNameInputFiled().getAttribute('value')).toEqual(heroForSelection);
+  });
+  it('existing hero should appear in search results', () => {
+    page.searchHeroByName(heroForDelete);
+    expect(page.getSearchResults().get(0).getText()).toEqual(heroForDelete);
+  });
+  it('After deletion ' + heroForDelete + ' hero shouldn\'t appear in search results', () => {
+    page.clickLinkByText('Heroes');
+    heroes.deleteHeroByName(heroForDelete);
+    expect(heroes.getHeroByName(heroForDelete).isPresent()).toBe(false);
+    heroes.clickLinkByText('Dashboard');
+    page.searchHeroByName(heroForDelete);
+    expect(page.getSearchResults().get(0).isPresent()).toBe(false);
   });
 });

@@ -26,6 +26,12 @@ export class BlankPage extends Navigation {
   getHeroByNameOnHomePage(name: string) {
     return element(by.cssContainingText('h4', name));
   }
+  searchHeroByName(name: string){
+    element(by.id('search-box')).sendKeys(name);
+  }
+  getSearchResults() {
+    return element.all(by.css('.search-result'));
+  }
 }
 
 export class HeroPage extends Navigation {
@@ -65,6 +71,9 @@ export class HeroesListPage extends Navigation {
   }
   getHeroByName(name: string) {
     return element(by.cssContainingText('.hero-element', name));
+  }
+  getSelectionText(name: string) {
+    return element(by.cssContainingText('h2', name.toUpperCase() + ' is my hero'));
   }
 }
 
