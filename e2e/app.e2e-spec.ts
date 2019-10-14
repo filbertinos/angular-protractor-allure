@@ -3,6 +3,7 @@ import {BlankPage} from './page_objects/blank.po';
 import {HeroPage} from './page_objects/hero.po';
 import {HeroesListPage} from './page_objects/heroes.po';
 import {testData} from './test-data';
+var using = require('jasmine-data-provider');
 
 
 describe('blank App', () => {
@@ -91,11 +92,10 @@ describe('blank App', () => {
     page.searchHeroByName(testData.heroForDelete);
     expect(page.getSearchResults().get(0).isPresent()).toBe(false);
   });
-
-  for(let i = 0; i < testData.heroesForCreation.length; i++) {
-    it('after adding new hero with name ' + testData.heroesForCreation[i] + ', he should appear in heroes list', () => {
-      heroes.createHero(testData.heroesForCreation[i]);
-      expect(heroes.getHeroByName(testData.heroesForCreation[i]).isPresent()).toBe(true);
+  using(testData.heroesForCreation, function (data) {
+    it('after adding new hero with name ' + data.name + ', he should appear in heroes list', () => {
+      heroes.createHero(data.name);
+      expect(heroes.getHeroByName(data.name).isPresent()).toBe(true);
     });
-  }
+  });
 });
