@@ -1,17 +1,15 @@
-import {BlankPage, HeroesListPage, HeroPage} from './app.po';
 import {$, browser, by, element, protractor} from 'protractor';
+import {BlankPage} from './page_objects/blank.po';
+import {HeroPage} from './page_objects/hero.po';
+import {HeroesListPage} from './page_objects/heroes.po';
+import {testData} from './test-data';
 
 
 describe('blank App', () => {
   let page: BlankPage;
   let hero: HeroPage;
   let heroes: HeroesListPage;
-  let firstHeroName =  'Narco';
-  let newName = 'Test';
-  let heroForDelete = 'Celeritas';
-  let heroForSelection = 'Dynama';
-  let heroForAdding = 'NewHero';
-  let baseUrl = 'http://localhost:4200/';
+
 
 
   beforeEach(() => {
@@ -30,70 +28,70 @@ describe('blank App', () => {
   it('id of the hero should be equal id in the url on hero detailed page', () => {
     page.getNameOfFirstHero().click();
     hero.getHeroId().then(function (id) {
-      expect(browser.getCurrentUrl()).toEqual(baseUrl + 'detail/' + id);
+      expect(browser.getCurrentUrl()).toEqual(testData.baseUrl + 'detail/' + id);
     });
   });
-  it('name of the first hero in heroes list should be ' + firstHeroName, () => {
-    expect(page.getNameOfFirstHero()).toEqual(firstHeroName);
+  it('name of the first hero in heroes list should be ' + testData.firstHeroName, () => {
+    expect(page.getNameOfFirstHero()).toEqual(testData.firstHeroName);
   });
   it('name of the hero should be saved after changes on blank and My Heroes page', () => {
-    expect(page.getNameOfFirstHero()).toEqual(firstHeroName);
+    expect(page.getNameOfFirstHero()).toEqual(testData.firstHeroName);
     page.getNameOfFirstHero().click();
-    expect(hero.getDetailsText()).toEqual(firstHeroName + ' details!');
+    expect(hero.getDetailsText()).toEqual(testData.firstHeroName + ' details!');
     hero.getHeroNameInputFiled().clear();
-    hero.getHeroNameInputFiled().sendKeys(newName);
-    expect(hero.getDetailsText()).toEqual(newName + ' details!');
+    hero.getHeroNameInputFiled().sendKeys(testData.newName);
+    expect(hero.getDetailsText()).toEqual(testData.newName + ' details!');
     hero.clickButtonByText('Save');
-    expect(page.getNameOfFirstHero()).toEqual(newName);
+    expect(page.getNameOfFirstHero()).toEqual(testData.newName);
     page.clickLinkByText('Heroes');
-    expect(heroes.getNameOfHeroByIndex(1)).toEqual(newName);
+    expect(heroes.getNameOfHeroByIndex(1)).toEqual(testData.newName);
   });
   it('number of heroes on My Heroes page should be 10', () => {
     page.clickLinkByText('Heroes');
     expect(heroes.getHeroes().count()).toEqual(10);
   });
-  it('second hero on My Heroes page should be ' + firstHeroName, () => {
+  it('second hero on My Heroes page should be ' + testData.firstHeroName, () => {
     page.clickLinkByText('Heroes');
-    expect(heroes.getNameOfHeroByIndex(1)).toEqual(firstHeroName);
+    expect(heroes.getNameOfHeroByIndex(1)).toEqual(testData.firstHeroName);
   });
-  it('after deleting ' + heroForDelete + ' hero on My Heroes page, he should disappear from My heroes and blank pages', () => {
-    expect(page.getHeroByNameOnHomePage(heroForDelete).isPresent()).toBe(true);
+  it('after deleting ' + testData.heroForDelete + ' hero on My Heroes page, he should disappear from My heroes and blank pages', () => {
+    expect(page.getHeroByNameOnHomePage(testData.heroForDelete).isPresent()).toBe(true);
     page.clickLinkByText('Heroes');
-    heroes.deleteHeroByName(heroForDelete);
-    expect(heroes.getHeroByName(heroForDelete).isPresent()).toBe(false);
+    heroes.deleteHeroByName(testData.heroForDelete);
+    expect(heroes.getHeroByName(testData.heroForDelete).isPresent()).toBe(false);
     heroes.clickLinkByText('Dashboard');
-    expect(page.getHeroByNameOnHomePage(heroForDelete).isPresent()).toBe(false);
+    expect(page.getHeroByNameOnHomePage(testData.heroForDelete).isPresent()).toBe(false);
   });
   it('after adding new hero he should appear in heroes list', () => {
     page.clickLinkByText('Heroes');
     heroes.clickButtonByText('Add New Hero');
-    heroes.getHeroNameInputFiled().sendKeys(heroForAdding);
-    expect(heroes.getDetailsText()).toEqual(heroForAdding + ' details!');
+    heroes.getHeroNameInputFiled().sendKeys(testData.heroForAdding);
+    expect(heroes.getDetailsText()).toEqual(testData.heroForAdding + ' details!');
     heroes.clickButtonByText('Save');
-    expect(heroes.getHeroByName(heroForAdding).isPresent()).toBe(true);
+    expect(heroes.getHeroByName(testData.heroForAdding).isPresent()).toBe(true);
   });
   it('after selecting hero at the My Heroes page, inscription about selection should appear', () => {
     page.clickLinkByText('Heroes');
-    heroes.getHeroByName(heroForSelection).click();
-    expect(heroes.getSelectionText(heroForSelection).isPresent()).toBe(true);
+    heroes.getHeroByName(testData.heroForSelection).click();
+    expect(heroes.getSelectionText(testData.heroForSelection).isPresent()).toBe(true);
   });
   it('\'View details\' button for selected hero should navigate to correct hero details page', () => {
     page.clickLinkByText('Heroes');
-    heroes.getHeroByName(heroForSelection).click();
+    heroes.getHeroByName(testData.heroForSelection).click();
     heroes.clickButtonByText('View Details');
-    expect(hero.getDetailsText()).toEqual(heroForSelection + ' details!');
-    expect(hero.getHeroNameInputFiled().getAttribute('value')).toEqual(heroForSelection);
+    expect(hero.getDetailsText()).toEqual(testData.heroForSelection + ' details!');
+    expect(hero.getHeroNameInputFiled().getAttribute('value')).toEqual(testData.heroForSelection);
   });
   it('existing hero should appear in search results', () => {
-    page.searchHeroByName(heroForDelete);
-    expect(page.getSearchResults().get(0).getText()).toEqual(heroForDelete);
+    page.searchHeroByName(testData.heroForDelete);
+    expect(page.getSearchResults().get(0).getText()).toEqual(testData.heroForDelete);
   });
-  it('After deletion ' + heroForDelete + ' hero shouldn\'t appear in search results', () => {
+  it('After deletion ' + testData.heroForDelete + ' hero shouldn\'t appear in search results', () => {
     page.clickLinkByText('Heroes');
-    heroes.deleteHeroByName(heroForDelete);
-    expect(heroes.getHeroByName(heroForDelete).isPresent()).toBe(false);
+    heroes.deleteHeroByName(testData.heroForDelete);
+    expect(heroes.getHeroByName(testData.heroForDelete).isPresent()).toBe(false);
     heroes.clickLinkByText('Dashboard');
-    page.searchHeroByName(heroForDelete);
+    page.searchHeroByName(testData.heroForDelete);
     expect(page.getSearchResults().get(0).isPresent()).toBe(false);
   });
 });
