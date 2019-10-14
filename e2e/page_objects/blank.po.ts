@@ -1,9 +1,10 @@
 import {browser, element, by} from 'protractor';
 import {Navigation} from './common-nav.po';
+import {selector} from '../selectors';
 
 export class BlankPage extends Navigation {
-  paragraphTextLocator = element(by.css('my-root h1'));
-  numberOfHeroes = element.all(by.css('.hero'));
+  paragraphTextLocator = element(by.css(selector.blank.paragraphText));
+  numberOfHeroes = element.all(by.css(selector.blank.heroTag));
   navigateTo() {
     return browser.get('/');
   }
@@ -14,17 +15,22 @@ export class BlankPage extends Navigation {
     return this.numberOfHeroes;
   }
   getNameOfFirstHero() {
-    browser.wait(EC.presenceOf(this.getNumberOfTopHeroes().all(by.css('h4')).first()), 2000);
-    return this.getNumberOfTopHeroes().all(by.css('h4')).first().getText();
+    browser.wait(EC.presenceOf(this.getNumberOfTopHeroes().first()), 2000);
+    return this.getNumberOfTopHeroes().first().getText();
   }
   getHeroByNameOnHomePage(name: string) {
-    return element(by.cssContainingText('h4', name));
+    return element(by.cssContainingText(selector.blank.heroTag, name));
   }
   searchHeroByName(name: string) {
-    element(by.id('search-box')).sendKeys(name);
+    allure.createStep('Search for the ' + '\'name\'' + ' hero', function(){})();
+    element(by.css(selector.blank.searchBox)).sendKeys(name);
   }
   getSearchResults() {
-    return element.all(by.css('.search-result'));
+    return element.all(by.css(selector.blank.searchResult));
+  }
+  clickOnFirstHero() {
+    allure.createStep('Click on first hero', function(){})();
+    this.getNumberOfTopHeroes().first().click();
   }
 }
 
