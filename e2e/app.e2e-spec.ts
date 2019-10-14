@@ -11,22 +11,23 @@ describe('blank App', () => {
   let heroes: HeroesListPage;
 
 
-
   beforeEach(() => {
     page = new BlankPage();
     hero = new HeroPage();
     heroes = new HeroesListPage();
-    page.navigateTo();
+    allure.createStep('Opening main page', function(){
+      page.navigateTo();
+    })();
   });
 
   it('should display message saying app works', () => {
     expect(page.getParagraphText()).toEqual('Tour of Heroes');
   });
   it('should display four top heroes at start', () => {
-    expect(page.getNumberOfTopHeroes().count()).toBe(4);
+    expect(page.getNumberOfTopHeroes().count()).toEqual(4);
   });
   it('id of the hero should be equal id in the url on hero detailed page', () => {
-    page.getNameOfFirstHero().click();
+    page.clickOnFirstHero();
     hero.getHeroId().then(function (id) {
       expect(browser.getCurrentUrl()).toEqual(testData.baseUrl + 'detail/' + id);
     });
@@ -36,10 +37,10 @@ describe('blank App', () => {
   });
   it('name of the hero should be saved after changes on blank and My Heroes page', () => {
     expect(page.getNameOfFirstHero()).toEqual(testData.firstHeroName);
-    page.getNameOfFirstHero().click();
+    page.clickOnFirstHero();
     expect(hero.getDetailsText()).toEqual(testData.firstHeroName + ' details!');
-    hero.getHeroNameInputFiled().clear();
-    hero.getHeroNameInputFiled().sendKeys(testData.newName);
+    hero.clearNameField();
+    hero.fillNameField(testData.newName);
     expect(hero.getDetailsText()).toEqual(testData.newName + ' details!');
     hero.clickButtonByText('Save');
     expect(page.getNameOfFirstHero()).toEqual(testData.newName);
