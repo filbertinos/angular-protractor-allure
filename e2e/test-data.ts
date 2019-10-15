@@ -7,10 +7,10 @@ const testData = {
  heroForAdding: 'NewHero',
  baseUrl: 'http://localhost:4200/',
   heroesForCreation: [
-    { name: 'Bob' },
-    { name: 'Andrew' },
-    { name: 'Mark' },
-    { name: 'Tom' }
+    { name: 'Bob', assert: true },
+    { name: '@ndrew', assert: true },
+    { name: 'M ark', assert: true },
+    { name: '!Tom', assert: true }
   ]
 };
 export const testData = testData;

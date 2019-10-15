@@ -95,7 +95,7 @@ describe('blank App', () => {
   using(testData.heroesForCreation, function (data) {
     it('after adding new hero with name ' + data.name + ', he should appear in heroes list', () => {
       heroes.createHero(data.name);
-      expect(heroes.getHeroByName(data.name).isPresent()).toBe(true);
+      expect(heroes.getHeroByName(data.name).isPresent()).toBe(data.assert);
     });
   });
 });
