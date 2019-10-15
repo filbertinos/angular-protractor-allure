@@ -3,7 +3,7 @@ import {BlankPage} from './page_objects/blank.po';
 import {HeroPage} from './page_objects/hero.po';
 import {HeroesListPage} from './page_objects/heroes.po';
 import {testData} from './test-data';
-var using = require('jasmine-data-provider');
+const using = require('jasmine-data-provider');
 
 
 describe('blank App', () => {
