@@ -21,7 +21,7 @@ export class HeroesListPage extends Navigation {
 
   deleteHeroByName(name: string) {
     allure.createStep('Deleting hero by ' + '\'name\'', function(){})();
-    element(by.cssContainingText(selector.heroes.heroElement, name)).element(by.xpath('following-sibling::button')).click();
+    this.getHeroByName(name).element(by.xpath('following-sibling::button')).click();
   }
   getHeroByName(name: string) {
     return element(by.cssContainingText(selector.heroes.heroElement, name));
